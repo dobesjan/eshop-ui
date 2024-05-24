@@ -18,31 +18,26 @@ const CategoryMenu = () => {
   }, []);
 
   const groupCategoriesByParent = (categories) => {
-    // Create a map to store categories grouped by parent ID
     const categoryMap = new Map();
 
-    // Iterate over each category
+    // First pass: Group categories by their parentCategoryId
     categories.forEach(category => {
-      const parentId = category.parentCategoryId || null;
-      
-      // If the map doesn't have an entry for the parent ID, create one
+      const parentId = category.parentCategoryId;
       if (!categoryMap.has(parentId)) {
         categoryMap.set(parentId, []);
       }
-
-      // Add the current category to the list of children for its parent
       categoryMap.get(parentId).push(category);
     });
 
-    // Retrieve the top-level categories (those with a parent ID of null)
-    const topLevelCategories = categoryMap.get(null) || [];
-
-    // Attach children to their respective parents
-    topLevelCategories.forEach(category => {
-      category.children = categoryMap.get(category.id) || [];
+    // Second pass: Assign child categories to their respective parent
+    categories.forEach(category => {
+      if (categoryMap.has(category.id)) {
+        category.children = categoryMap.get(category.id);
+      }
     });
 
-    return topLevelCategories;
+    // Filter out categories with a parentCategoryId (only top-level categories)
+    return categories.filter(category => !category.parentCategoryId);
   };
 
   const renderCategory = (category) => {
