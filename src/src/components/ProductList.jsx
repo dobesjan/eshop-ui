@@ -8,7 +8,11 @@ const ProductList = () => {
     return productService.getProducts(offset, limit);
   }, []);
 
-  const { data: products, loading, error, currentPage, totalPages, setCurrentPage } = usePagination(fetchProducts);
+  const totalCount = useCallback(async () => {
+    return productService.getProductsCount();
+  }, []);
+
+  const { data: products, loading, error, currentPage, totalPages, setCurrentPage } = usePagination(fetchProducts, totalCount);
 
   const handlePageChange = useCallback(pageNumber => {
     setCurrentPage(pageNumber);

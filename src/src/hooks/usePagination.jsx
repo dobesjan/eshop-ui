@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 
-const usePagination = (fetchFunction, initialLimit = 10) => {
+const usePagination = (fetchFunction, countFunction, initialLimit = 10) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,8 +12,9 @@ const usePagination = (fetchFunction, initialLimit = 10) => {
     setLoading(true);
     try {
       const response = await fetchFunction((currentPage - 1) * limit, limit);
+      const countResponse = await countFunction();
       setData(response.data.data);
-      setTotalItems(response.data.totalCount || response.data.data.length);
+      setTotalItems(countResponse.data.data.count);
       setLoading(false);
     } catch (error) {
       setError(error);
