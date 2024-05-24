@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import productService from '../api/productService';
 import usePagination from '../hooks/usePagination';
 import Pagination from './Pagination';
@@ -34,7 +34,8 @@ const ProductList = () => {
       <ul>
         {products.map(product => (
           <li key={product.id}>
-            {product.name} - {product.isInStock ? 'Available' : 'Unavailable'}
+            <Link to={`/product/${product.id}`}>{product.name}</Link>
+            {product.isInStock ? 'Available' : 'Unavailable'}
           </li>
         ))}
       </ul>

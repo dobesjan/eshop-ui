@@ -24,6 +24,7 @@ const ProductDetail = () => {
   if (error) return <p>Error loading product: {error.message}</p>;
   if (!product) return <p>Product not found</p>;
 
+  //TODO: Resolve currency by user preference
   return (
     <div>
       <h1>{product.name}</h1>
