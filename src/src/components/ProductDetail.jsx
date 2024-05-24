@@ -26,9 +26,9 @@ const ProductDetail = () => {
 
   return (
     <div>
-      <h1>{product.Name}</h1>
-      <p>{product.Enabled ? 'Available' : 'Unavailable'}</p>
-      <p>Price: {product.Prices?.[0]?.Cost}</p>
+      <h1>{product.name}</h1>
+      <p>{product.isInStock ? 'Available' : 'Unavailable'}</p>
+      <p>Price: {product.prices?.[0]?.Cost}</p>
     </div>
   );
 };
