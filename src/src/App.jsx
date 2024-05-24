@@ -22,16 +22,14 @@ const App = () => {
   }, []);
 
   return (
-    <>
-      <CategoryMenu categories={categories} />
-      <Router>
-        <Routes>
-          <Route path="/" element={<ProductList />} />
-          <Route path="/category/:categoryId" element={<ProductList />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-        </Routes>
-      </Router>
-    </>
+    <Router>
+    <CategoryMenu categories={categories} />
+      <Routes>
+        <Route path="/" element={<ProductList />} />
+        <Route path="/category/:categoryId" element={<ProductList />} />
+        <Route path="/product/:id" element={<ProductDetail />} />
+      </Routes>
+    </Router>
   );
 };
 

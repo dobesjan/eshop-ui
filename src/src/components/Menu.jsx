@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import categoryService from '../api/categoryService';
 
 const CategoryMenu = () => {
@@ -43,7 +44,7 @@ const CategoryMenu = () => {
   const renderCategory = (category) => {
     return (
       <li key={category.id} className="list-group-item">
-        {category.name}
+        <Link to={`/category/${category.id}`}>{category.name}</Link>
         {category.children && category.children.length > 0 && (
           <ul>
             {category.children.map(child => renderCategory(child))}
