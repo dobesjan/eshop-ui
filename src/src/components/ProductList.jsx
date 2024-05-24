@@ -1,16 +1,23 @@
 import { useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 import productService from '../api/productService';
 import usePagination from '../hooks/usePagination';
 import Pagination from './Pagination';
 
 const ProductList = () => {
+  const { categoryId } = useParams();
+
   const fetchProducts = useCallback(async (offset, limit) => {
-    return productService.getProducts(offset, limit);
-  }, []);
+    return categoryId 
+      ? productService.getProducts(offset, limit, categoryId)
+      : productService.getProducts(offset, limit);
+  }, [categoryId]);
 
   const totalCount = useCallback(async () => {
-    return productService.getProductsCount();
-  }, []);
+    return categoryId
+      ? productService.getProductsCount(categoryId)
+      : productService.getProductsCount();
+  }, [categoryId]);
 
   const { data: products, loading, error, currentPage, totalPages, setCurrentPage } = usePagination(fetchProducts, totalCount);
 
