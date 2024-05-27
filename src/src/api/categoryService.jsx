@@ -1,14 +1,9 @@
-import axios from 'axios';
+import apiClient from './apiClient';
 
-const apiClient = axios.create({
-  baseURL: 'https://localhost:7199/api/Category',
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
-
-export default {
+const categoryService = {
   getCategories() {
-    return apiClient.get(`/list`);
+    return apiClient.get('/Category/list');
   }
 };
+
+export default categoryService;
