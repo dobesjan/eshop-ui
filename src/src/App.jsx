@@ -13,9 +13,8 @@ import Auth0ProviderWithHistory from './components/auth0.jsx';
 
 const App = () => {
   const [categories, setCategories] = useState([]);
-  const { isAuthenticated } = useAuth0();
-  console.log(isAuthenticated);
-
+  const { isAuthenticated, error } = useAuth0();
+  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -29,18 +28,26 @@ const App = () => {
     fetchCategories();
   }, []);
 
+  useEffect(() => {
+    if (error) {
+      console.error('Authentication error:', error);
+      // Handle the error, for example, by displaying an error message or redirecting the user
+      // You can also show a notification to the user or redirect them to a login page
+    }
+  }, [error]);
+
   return (
     <Router>
       <Auth0ProviderWithHistory>
-        {isAuthenticated ? <LogoutButton /> : <LoginButton />}
-        <CategoryMenu categories={categories} />
-        <Routes>
-          <Route path="/callback/:provider" element={<Callback />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/" element={<ProductList />} />
-          <Route path="/category/:categoryId" element={<ProductList />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-        </Routes>
+          {isAuthenticated ? <LogoutButton /> : <LoginButton />}
+          <CategoryMenu categories={categories} />
+          <Routes>
+            <Route path="/callback/:provider" element={<Callback />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/" element={<ProductList />} />
+            <Route path="/category/:categoryId" element={<ProductList />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+          </Routes>
       </Auth0ProviderWithHistory>
     </Router>
   );

@@ -1,10 +1,9 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Auth0Provider } from '@auth0/auth0-react';
+import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 
 const Auth0ProviderWithHistory = ({ children }) => {
   const navigate = useNavigate();
-  //const domain = process.env.REACT_APP_AUTH0_DOMAIN || 'REACT_APP_AUTH0_DOMAIN';
-  //const clientId = process.env.REACT_APP_AUTH0_CLIENT_ID || 'REACT_APP_AUTH0_DOMAIN';
   const domain = 'dev-c2revach3lofx66y.us.auth0.com';
   const clientId = 'NLvz2lNLMmL00WNsLcSNMFZWX4sCmuQW';
 
@@ -12,31 +11,46 @@ const Auth0ProviderWithHistory = ({ children }) => {
     navigate(appState?.returnTo || window.location.pathname);
   };
 
-  const onLoginSuccess = (loginRedirectResult) => {
-    const accessToken = loginRedirectResult?.accessToken;
-    if (accessToken) {
-      localStorage.setItem('jwtToken', accessToken);
-    }
-    onRedirectCallback(loginRedirectResult.appState);
-  };
-
-  const onLoginFail = (error) => {
-    // Handle authentication failure here
-    console.error('Authentication failed:', error);
-    // Redirect or perform other actions as needed
-  };
-
   return (
     <Auth0Provider
       domain={domain}
       clientId={clientId}
-      redirectUri={"http://localhost:5173"}
-      onRedirectCallback={onLoginSuccess}
-      onError={onLoginFail}
+      redirectUri={window.location.origin}
+      onRedirectCallback={onRedirectCallback}
     >
-      {children}
+      <AuthWrapper>{children}</AuthWrapper>
     </Auth0Provider>
   );
+};
+
+const AuthWrapper = ({ children }) => {
+  const { isAuthenticated, getAccessTokenSilently, error } = useAuth0();
+
+  useEffect(() => {
+    const handleLoginSuccess = async () => {
+      if (isAuthenticated) {
+        try {
+          const accessToken = await getAccessTokenSilently();
+          if (accessToken) {
+            localStorage.setItem('jwtToken', accessToken);
+          }
+          // Additional actions on successful login can be added here
+        } catch (err) {
+          console.error('Failed to get access token:', err);
+        }
+      }
+    };
+
+    handleLoginSuccess();
+  }, [isAuthenticated, getAccessTokenSilently]);
+
+  useEffect(() => {
+    if (error) {
+      console.error('Authentication error:', error);
+    }
+  }, [error]);
+
+  return <>{children}</>;
 };
 
 export default Auth0ProviderWithHistory;
