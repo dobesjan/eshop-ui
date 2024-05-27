@@ -6,10 +6,15 @@ import ProductDetail from './components/ProductDetail';
 import CategoryMenu from './components/Menu';
 import Callback from './components/Callback';
 import LoginPage from './components/LoginPage';
-import AuthenticationProvider from './components/Authentication';
+import { useAuth0 } from '@auth0/auth0-react';
+import LoginButton from './components/LoginButton';
+import LogoutButton from './components/LogoutButton';
+import Auth0ProviderWithHistory from './components/auth0.jsx';
 
 const App = () => {
   const [categories, setCategories] = useState([]);
+  const { isAuthenticated } = useAuth0();
+  console.log(isAuthenticated);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -25,8 +30,9 @@ const App = () => {
   }, []);
 
   return (
-    <AuthenticationProvider>
-      <Router>
+    <Router>
+      <Auth0ProviderWithHistory>
+        {isAuthenticated ? <LogoutButton /> : <LoginButton />}
         <CategoryMenu categories={categories} />
         <Routes>
           <Route path="/callback/:provider" element={<Callback />} />
@@ -35,8 +41,8 @@ const App = () => {
           <Route path="/category/:categoryId" element={<ProductList />} />
           <Route path="/product/:id" element={<ProductDetail />} />
         </Routes>
-      </Router>
-    </AuthenticationProvider>
+      </Auth0ProviderWithHistory>
+    </Router>
   );
 };
 

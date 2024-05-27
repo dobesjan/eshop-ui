@@ -1,6 +1,6 @@
 import { useEffect, useState, createContext, useContext } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
-import providers from './api/oidc-providers';
+import { useNavigate, useLocation } from 'react-router-dom';
+import providers from '../api/oidc-providers';
 
 const AuthContext = createContext();
 
@@ -10,7 +10,7 @@ const AuthenticationProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [provider, setProvider] = useState(null);
   const location = useLocation();
-  const history = useHistory();
+  const history = useNavigate();
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -36,7 +36,7 @@ const AuthenticationProvider = ({ children }) => {
   }, [provider]);
 
   const login = (providerKey) => {
-    history.push(`/?provider=${providerKey}`);
+    navigate(`/?provider=${providerKey}`);
   };
 
   const logout = () => {

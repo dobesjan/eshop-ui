@@ -1,15 +1,15 @@
 import { useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import providers from './oidc-providers';
+import { useNavigate, useParams } from 'react-router-dom';
+import providers from '../api/oidc-providers';
 
 const Callback = () => {
-  const history = useHistory();
+  const history = useNavigate();
   const { provider } = useParams();
 
   useEffect(() => {
     if (provider && providers[provider]) {
       providers[provider].signinRedirectCallback().then(() => {
-        history.push('/');
+        navigate('/');
       }).catch(err => {
         console.error(err);
       });
