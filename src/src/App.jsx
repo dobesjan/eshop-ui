@@ -9,11 +9,13 @@ import LoginPage from './components/LoginPage';
 import { useAuth0 } from '@auth0/auth0-react';
 import LoginButton from './components/LoginButton';
 import LogoutButton from './components/LogoutButton';
-import Auth0ProviderWithHistory from './components/auth0.jsx';
+import Auth0ProviderWithNavigate from './components/auth0.jsx';
 
 const App = () => {
   const [categories, setCategories] = useState([]);
-  const { isAuthenticated, error } = useAuth0();
+  const { user, isAuthenticated, error } = useAuth0();
+
+  console.log(user);
   
   useEffect(() => {
     const fetchCategories = async () => {
@@ -31,24 +33,22 @@ const App = () => {
   useEffect(() => {
     if (error) {
       console.error('Authentication error:', error);
-      // Handle the error, for example, by displaying an error message or redirecting the user
-      // You can also show a notification to the user or redirect them to a login page
     }
   }, [error]);
 
   return (
     <Router>
-      <Auth0ProviderWithHistory>
-          {isAuthenticated ? <LogoutButton /> : <LoginButton />}
-          <CategoryMenu categories={categories} />
-          <Routes>
-            <Route path="/callback/:provider" element={<Callback />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/" element={<ProductList />} />
-            <Route path="/category/:categoryId" element={<ProductList />} />
-            <Route path="/product/:id" element={<ProductDetail />} />
-          </Routes>
-      </Auth0ProviderWithHistory>
+      <Auth0ProviderWithNavigate>
+        {isAuthenticated ? <LogoutButton /> : <LoginButton />}
+        <CategoryMenu categories={categories} />
+        <Routes>
+          <Route path="/callback/:provider" element={<Callback />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/" element={<ProductList />} />
+          <Route path="/category/:categoryId" element={<ProductList />} />
+          <Route path="/product/:id" element={<ProductDetail />} />
+        </Routes>
+      </Auth0ProviderWithNavigate>
     </Router>
   );
 };

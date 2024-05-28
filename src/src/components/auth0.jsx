@@ -1,11 +1,13 @@
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
+import { useEffect } from 'react';
 
-const Auth0ProviderWithHistory = ({ children }) => {
+const Auth0ProviderWithNavigate = ({ children }) => {
   const navigate = useNavigate();
+
   const domain = 'dev-c2revach3lofx66y.us.auth0.com';
   const clientId = 'NLvz2lNLMmL00WNsLcSNMFZWX4sCmuQW';
+  const audience = 'https://eshop-api';
 
   const onRedirectCallback = (appState) => {
     navigate(appState?.returnTo || window.location.pathname);
@@ -17,40 +19,33 @@ const Auth0ProviderWithHistory = ({ children }) => {
       clientId={clientId}
       redirectUri={window.location.origin}
       onRedirectCallback={onRedirectCallback}
+      audience={audience}
     >
-      <AuthWrapper>{children}</AuthWrapper>
+      <AuthHandler />
+      {children}
     </Auth0Provider>
   );
 };
 
-const AuthWrapper = ({ children }) => {
-  const { isAuthenticated, getAccessTokenSilently, error } = useAuth0();
+const AuthHandler = () => {
+  const { isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
-    const handleLoginSuccess = async () => {
+    const storeToken = async () => {
       if (isAuthenticated) {
         try {
-          const accessToken = await getAccessTokenSilently();
-          if (accessToken) {
-            localStorage.setItem('jwtToken', accessToken);
-          }
-          // Additional actions on successful login can be added here
-        } catch (err) {
-          console.error('Failed to get access token:', err);
+          const token = await getAccessTokenSilently();
+          localStorage.setItem('jwtToken', token);
+        } catch (error) {
+          console.error('Failed to get access token:', error);
         }
       }
     };
 
-    handleLoginSuccess();
+    storeToken();
   }, [isAuthenticated, getAccessTokenSilently]);
 
-  useEffect(() => {
-    if (error) {
-      console.error('Authentication error:', error);
-    }
-  }, [error]);
-
-  return <>{children}</>;
+  return null;
 };
 
-export default Auth0ProviderWithHistory;
+export default Auth0ProviderWithNavigate;
