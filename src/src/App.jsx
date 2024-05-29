@@ -4,8 +4,6 @@ import categoryService from './api/categoryService';
 import ProductList from './components/ProductList';
 import ProductDetail from './components/ProductDetail';
 import CategoryMenu from './components/Menu';
-import Callback from './components/Callback';
-import LoginPage from './components/LoginPage';
 import { useAuth0 } from '@auth0/auth0-react';
 import LoginButton from './components/LoginButton';
 import LogoutButton from './components/LogoutButton';
@@ -42,8 +40,6 @@ const App = () => {
         {isAuthenticated ? <LogoutButton /> : <LoginButton />}
         <CategoryMenu categories={categories} />
         <Routes>
-          <Route path="/callback/:provider" element={<Callback />} />
-          <Route path="/login" element={<LoginPage />} />
           <Route path="/" element={<ProductList />} />
           <Route path="/category/:categoryId" element={<ProductList />} />
           <Route path="/product/:id" element={<ProductDetail />} />
