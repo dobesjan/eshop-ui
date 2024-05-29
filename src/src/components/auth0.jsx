@@ -14,20 +14,18 @@ const Auth0ProviderWithNavigate = ({ children }) => {
   };
 
   const providerConfig = {
-    domain: domain,
-    clientId: clientId,
+    domain,
+    clientId,
     onRedirectCallback,
     authorizationParams: {
       redirect_uri: window.location.origin,
-      audience: audience,
-      scope: 'openid profile email'
+      audience,
+      scope: 'openid profile email',
     },
   };
 
   return (
-    <Auth0Provider
-      {...providerConfig}
-    >
+    <Auth0Provider {...providerConfig}>
       <AuthHandler />
       {children}
     </Auth0Provider>
