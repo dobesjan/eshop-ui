@@ -13,13 +13,20 @@ const Auth0ProviderWithNavigate = ({ children }) => {
     navigate(appState?.returnTo || window.location.pathname);
   };
 
+  const providerConfig = {
+    domain: domain,
+    clientId: clientId,
+    onRedirectCallback,
+    authorizationParams: {
+      redirect_uri: window.location.origin,
+      audience: audience,
+      scope: 'openid profile email'
+    },
+  };
+
   return (
     <Auth0Provider
-      domain={domain}
-      clientId={clientId}
-      redirectUri={window.location.origin}
-      onRedirectCallback={onRedirectCallback}
-      audience={audience}
+      {...providerConfig}
     >
       <AuthHandler />
       {children}
